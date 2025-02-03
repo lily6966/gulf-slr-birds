@@ -12,7 +12,7 @@ This project migrate code from https://github.com/gomes-lab/DMVP-DRNets/tree/v1.
 
 ## Experiment with data splitting
 
-The dataset can be split into small overlapping regions to smooth the predictions. If this is desired, run the following:
+The dataset can be split into small overlapping regions to smooth the predictions. The splitting task was implemented using Stemflow package source code https://github.com/chenyangkang/stemflow. If this is desired, run the following:
 
 ```
 # Preprocess the data 
@@ -31,26 +31,6 @@ python3 test_split.py
 python3 map_inference_split.py
 ```
 
-## Experiment without data splitting
-
-Alternatively, the experiments can be run without splitting the data this way:
-
-```
-# Preprocess the data 
-cd data
-python3 preprocess_folder.py
-bash gen_data_nosplit.sh
-cd ..
-
-# Training step
-python3 train_nosplit.py
-
-# Evaluation test step
-python3 test_nosplit.py
-
-# Prediction step on real-world data
-python3 map_inference_nosplit.py
-```
 
 ## Log files
 
