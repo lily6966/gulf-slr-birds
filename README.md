@@ -1,4 +1,6 @@
-# eBird experiments
+# Sea level rise impacts on bird distribution in the Gulf of Mexico
+
+This project migrate code from https://github.com/gomes-lab/DMVP-DRNets/tree/v1.0 to achieve the research objective of analyzing bird population changes in the Gulf of Mexico with sea level rises.
 
 ## Requirements
 
