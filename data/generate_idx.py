@@ -6,10 +6,10 @@ train_frac = 0.8
 val_frac = 0.1
 test_frac = 0.1
 
-with open("generated_box_tuple6.pkl", "rb") as f:
+with open("generated_box_tuple12.pkl", "rb") as f:
     generated_box = pickle.load(f)
 
-for ii in range(400):
+for ii in range(96):
     for jj in range(1, 13):
         if not os.path.exists("./small_region/small_case%d_bird_%d.npy" % (ii, jj)):
             continue

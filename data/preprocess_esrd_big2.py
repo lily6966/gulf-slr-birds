@@ -12,21 +12,21 @@ if __name__ == "__main__":
     with open("feature_lst.pkl", "rb") as f:
         feature_lst = pickle.load(f)
 
-    with open("generated_box_tuple6.pkl", "rb") as f:
+    with open("generated_box_tuple12.pkl", "rb") as f:
         generated_box = pickle.load(f)
 
     # Month-day mapping
     mon2day = {1: 15, 2: 45, 3: 74, 4: 105, 5: 135, 6: 166, 7: 196, 8: 227, 9: 258, 10: 288, 11: 319, 12: 349}
 
-    print("Box number:", len(generated_box))
+    #print("Box number:", len(generated_box))
     os.makedirs("./small_esrd/", exist_ok=True)  # Ensure output directory exists
 
     # Iterate over months
     for cnt in range(1, 13):
         mon = cnt
-        features = [[] for _ in range(399)]
-        labels = [[] for _ in range(399)]
-        locs = [[] for _ in range(399)]
+        features = [[] for _ in range(97)]
+        labels = [[] for _ in range(97)]
+        locs = [[] for _ in range(97)]
 
         # Process ESRD file
         with open(esrd_file_path, "r") as f:
@@ -44,19 +44,19 @@ if __name__ == "__main__":
 
                 # Reset case for each line
                 case = []
-
+                monthly_box = [box for box in generated_box if box[0] == cnt]
                 # Match with generated_box
-                for sequence, lon_min, lon_max, lat_min, lat_max, day_start, day_end in generated_box:
-                    if lon_min <= lon < lon_max and lat_min <= lat < lat_max and day_start <= feature[1] < day_end:
+                for month, sequence, longitude_lower_bound, longitude_upper_bound, latitude_lower_bound, latitude_upper_bound in monthly_box:
+                    if longitude_lower_bound <= lon < longitude_upper_bound and latitude_lower_bound <= lat < latitude_upper_bound:
                         case.append(sequence)
-
+                print(case)
                 # Skip if no matching cases
                 if not case:
                     continue
 
                 # Fill feature vector
                 for j, idx in enumerate(feature_lst):
-                    feature[6 + j] = float(line[idx])
+                    feature[5 + j] = float(line[idx])
 
                 # Add additional features
                 feature[0] = 0
@@ -69,10 +69,10 @@ if __name__ == "__main__":
                 # Append data to respective cases
                 for item in case:
                     item = int(item)
-                    features[item - 1].append(feature)
-                    labels[item - 1].append(label)
-                    locs[item - 1].append(np.array(loc))
-
+                    features[item].append(feature)
+                    labels[item].append(label)
+                    locs[item].append(np.array(loc))
+        
         # Process and save data for each case
         for item in range(len(features)):
             if len(features[item]) == 0:
@@ -87,7 +87,7 @@ if __name__ == "__main__":
                 features[item] = preprocessing.scale(features[item])
 
                 # Print sizes for debugging
-                print(f"Month {mon}, Box {item + 1}")
+                print(f"Month {mon}, Box {item}")
                 print(f"Features size: {features[item].shape}")
                 print(f"Labels size: {labels[item].shape}")
                 print(f"Locations size: {locs[item].shape}")
@@ -95,7 +95,7 @@ if __name__ == "__main__":
                 # Combine data and save
                 data = np.concatenate((locs[item], labels[item], features[item]), axis=1)
                 print(f"Data size: {data.shape}")
-                np.save(f"./small_esrd/small_esrd_{item + 1}_{mon}.npy", data)
+                np.save(f"./small_esrd/small_esrd_{item+1}_{mon}.npy", data)
 
             except Exception as e:
                 print(f"Error processing Month {mon}, Box {item + 1}: {e}")

@@ -9,38 +9,35 @@ file_path = "./ebird_occurance_habitat.csv" #ebird with common name and habitat 
 if __name__ == "__main__":
 
     # Load the generated box data
-    with open("generated_box_tuple6.pkl", "rb") as f:
+    with open("generated_box_tuple12.pkl", "rb") as f:
         generated_box = pickle.load(f)
     
-    features = [[[] for _ in range(12)] for ii in range(400)]
-    labels = [[[] for _ in range(12)] for ii in range(400)]
-    locs = [[[] for _ in range(12)] for ii in range(400)]
-    counts = [[[] for _ in range(12)] for ii in range(400)]
+    features = [[[] for _ in range(12)] for ii in range(97)]
+    labels = [[[] for _ in range(12)] for ii in range(97)]
+    locs = [[[] for _ in range(12)] for ii in range(97)]
+    counts = [[[] for _ in range(12)] for ii in range(97)]
     # Read the eBird data into a DataFrame
     ebird = pd.read_csv(file_path)
     ebird = ebird.drop(columns=['year'])
     # Sum of days to determine the day ranges for each month
-    sum_days = [0 for _ in range(13)]
-    months = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] 
+    sum_days = [0 for _ in range(13)] #total days up to a certain month say Jan 31 Feb 60
+    months = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] 
     for i in range(1, 13):
-        sum_days[i] = sum_days[i - 1] + months[i]
+        sum_days[i] = sum_days[i-1] + months[i-1]
 
     # Initialize an empty list to store monthly DataFrames
-    monthly_ebird = []
-
+    monthly_ebird = [0 for _ in range(12)]
     # Iterate through each month and filter data
-    for i in range(len(sum_days) - 1):
-        start_day = sum_days[i]
-        end_day = sum_days[i + 1]
+    for i in range(0, 12):
+        start_day, end_day = sum_days[i], sum_days[i+1]
         
         # Filter data for the current month
         monthly_df = ebird[(ebird['day_of_year'] > start_day) & (ebird['day_of_year'] <= end_day)]
-        # Append the filtered DataFrame to the list
-        monthly_ebird.append(monthly_df)
-
-    # Process each monthly DataFrame
-    for i, f in enumerate(monthly_ebird):
         
+        # Append the filtered DataFrame to the list
+        monthly_ebird[i] = monthly_df
+    # Process each monthly DataFrame
+    for i, f in enumerate(monthly_ebird):  
         mon_idx = i
         for ii, line in f.iterrows():
             if ii == 0:
@@ -51,12 +48,11 @@ if __name__ == "__main__":
             loc = [float(val) for val in loc]
             lat, lon = loc[0], loc[1]
             case = []
-            
+            monthly_box = [box for box in generated_box if box[0] == i]
             # Find the matching cases from selected_columns
-            for index, (sequence, longitude_lower_bound, longitude_upper_bound, latitude_lower_bound, latitude_upper_bound, day_of_year_start, day_of_year_end) in enumerate(generated_box):
-                if longitude_lower_bound <= lon < longitude_upper_bound and latitude_lower_bound <= lat < latitude_upper_bound and day_of_year_start <= day < day_of_year_end:
+            for month, sequence, longitude_lower_bound, longitude_upper_bound, latitude_lower_bound, latitude_upper_bound in monthly_box:
+                if longitude_lower_bound <= lon < longitude_upper_bound and latitude_lower_bound <= lat < latitude_upper_bound:
                     case.append(sequence)
-
             if len(case) == 0:
                 continue
             label = line.iloc[37:]           
@@ -73,9 +69,9 @@ if __name__ == "__main__":
             # Append features, labels, and other data
             for item in case:
                 item = int(item) 
-                features[item-1][mon_idx].append(np.array(feature))
-                labels[item-1][mon_idx].append(np.array(label))
-                locs[item-1][mon_idx].append(np.array(loc))
+                features[item][mon_idx-1].append(np.array(feature))
+                labels[item][mon_idx-1].append(np.array(label))
+                locs[item][mon_idx-1].append(np.array(loc))
                 
 
               
@@ -83,7 +79,7 @@ if __name__ == "__main__":
 
     invalid = 0
 
-    for i in range(400):
+    for i in range(97):
         for j in range(12):
             features[i][j] = np.array(features[i][j])
             labels[i][j] = np.array(labels[i][j])

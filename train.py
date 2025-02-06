@@ -72,10 +72,9 @@ def validation_step(hg, data, valid_idx, writer, step):
             all_indiv_prob.append(i)
         for i in input_label:
             all_label.append(i)
-    #print(all_indiv_prob)
-    print(all_indiv_prob)
+   
     all_indiv_prob = np.array(all_indiv_prob)
-    all_label = np.array(all_label, dtype=object)         
+    all_label = np.array(all_label)         
     
     # Compute average metrics
     mean_nll_loss = all_nll_loss / len(valid_idx)
@@ -200,7 +199,7 @@ def main(_):
                 temp_label = np.reshape(np.array(temp_label), (-1))
 
                 # Compute AP & AUC
-                ap = average_precision_score(temp_label, temp_indiv_prob)
+                ap = average_precision_score(temp_label, temp_indiv_prob.reshape(-1, 1))
 
                 try:
                     auc = roc_auc_score(temp_label, temp_indiv_prob)
@@ -219,10 +218,10 @@ def main(_):
                     tf.summary.scalar('train/l2_loss', mean_l2_loss, step=current_step)
                     tf.summary.scalar('train/total_loss', mean_total_loss, step=current_step)
                 
-                #time_str = datetime.datetime.now().isoformat()
+                time_str = datetime.datetime.now().isoformat()
 
-                #print ("validation results: %s\tauc=%.6f\tap=%.6f\tnll_loss=%.6f\tmarginal_loss=%.6f\tl2_loss=%.6f\ttotal_loss=%.6f" % (time_str, auc, ap, nll_loss, marginal_loss, l2_loss, total_loss))
-                print ("validation results: ap=%.6f\tnll_loss=%.6f\tmarginal_loss=%.6f\tl2_loss=%.6f\ttotal_loss=%.6f" % (ap, nll_loss, mean_marginal_loss, l2_loss, total_loss))
+                print ("validation results: %s\tauc=%.6f\tap=%.6f\tnll_loss=%.6f\tmarginal_loss=%.6f\tl2_loss=%.6f\ttotal_loss=%.6f" % (time_str, auc, ap, nll_loss, marginal_loss, l2_loss, total_loss))
+                #print ("validation results: ap=%.6f\tnll_loss=%.6f\tmarginal_loss=%.6f\tl2_loss=%.6f\ttotal_loss=%.6f" % (ap, nll_loss, mean_marginal_loss, l2_loss, total_loss))
 
                 # Reset accumulators
                 temp_indiv_prob = []

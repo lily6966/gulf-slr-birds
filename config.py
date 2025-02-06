@@ -15,8 +15,8 @@ flags.DEFINE_string('train_idx', '../data/train_idx.npy','The path of training d
 flags.DEFINE_string('valid_idx', '../data/valid_idx.npy','The path of validation data index')
 flags.DEFINE_string('test_idx', '../data/test_idx.npy','The path of testing data index')
 
-flags.DEFINE_integer('batch_size', 512, 'the number of data points in one minibatch') #128
-flags.DEFINE_integer('testing_size', 512, 'the number of data points in one testing or validation batch') #128
+flags.DEFINE_integer('batch_size', 100, 'the number of data points in one minibatch') #128
+flags.DEFINE_integer('testing_size', 100, 'the number of data points in one testing or validation batch') #128
 flags.DEFINE_integer('mon', 5, 'the number of data points in one testing or validation batch') #128
 flags.DEFINE_integer('case', 301, 'the number of data points in one testing or validation batch') #128
 flags.DEFINE_float('learning_rate', 0.001, 'initial learning rate')
