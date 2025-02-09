@@ -12,7 +12,7 @@ if __name__ == "__main__":
     with open("feature_lst.pkl", "rb") as f:
         feature_lst = pickle.load(f)
 
-    with open("generated_box_tuple12.pkl", "rb") as f:
+    with open("generated_box_tuple15.pkl", "rb") as f:
         generated_box = pickle.load(f)
 
     # Month-day mapping
@@ -24,9 +24,9 @@ if __name__ == "__main__":
     # Iterate over months
     for cnt in range(1, 13):
         mon = cnt
-        features = [[] for _ in range(97)]
-        labels = [[] for _ in range(97)]
-        locs = [[] for _ in range(97)]
+        features = [[] for _ in range(226)]
+        labels = [[] for _ in range(226)]
+        locs = [[] for _ in range(226)]
 
         # Process ESRD file
         with open(esrd_file_path, "r") as f:
@@ -46,8 +46,8 @@ if __name__ == "__main__":
                 case = []
                 monthly_box = [box for box in generated_box if box[0] == cnt]
                 # Match with generated_box
-                for month, sequence, longitude_lower_bound, longitude_upper_bound, latitude_lower_bound, latitude_upper_bound in monthly_box:
-                    if longitude_lower_bound <= lon < longitude_upper_bound and latitude_lower_bound <= lat < latitude_upper_bound:
+                for month, sequence, longitude_lower_bound, longitude_upper_bound, latitude_lower_bound, latitude_upper_bound, day_of_year_start, day_of_year_end in monthly_box:
+                    if longitude_lower_bound <= lon < longitude_upper_bound and latitude_lower_bound <= lat < latitude_upper_bound and day_of_year_start <= feature[1] < day_of_year_end:
                         case.append(sequence)
                 print(case)
                 # Skip if no matching cases
@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
                 # Fill feature vector
                 for j, idx in enumerate(feature_lst):
-                    feature[5 + j] = float(line[idx])
+                    feature[6 + j] = float(line[idx])
 
                 # Add additional features
                 feature[0] = 0
@@ -69,6 +69,7 @@ if __name__ == "__main__":
                 # Append data to respective cases
                 for item in case:
                     item = int(item)
+                    print(item)
                     features[item].append(feature)
                     labels[item].append(label)
                     locs[item].append(np.array(loc))
@@ -87,7 +88,7 @@ if __name__ == "__main__":
                 features[item] = preprocessing.scale(features[item])
 
                 # Print sizes for debugging
-                print(f"Month {mon}, Box {item}")
+                print(f"Month {mon}, Box {item+1}")
                 print(f"Features size: {features[item].shape}")
                 print(f"Labels size: {labels[item].shape}")
                 print(f"Locations size: {locs[item].shape}")

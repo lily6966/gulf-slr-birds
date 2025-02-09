@@ -9,13 +9,13 @@ file_path = "./ebird_occurance_habitat.csv" #ebird with common name and habitat 
 if __name__ == "__main__":
 
     # Load the generated box data
-    with open("generated_box_tuple12.pkl", "rb") as f:
+    with open("generated_box_tuple15.pkl", "rb") as f:
         generated_box = pickle.load(f)
     
-    features = [[[] for _ in range(12)] for ii in range(97)]
-    labels = [[[] for _ in range(12)] for ii in range(97)]
-    locs = [[[] for _ in range(12)] for ii in range(97)]
-    counts = [[[] for _ in range(12)] for ii in range(97)]
+    features = [[[] for _ in range(12)] for ii in range(226)]
+    labels = [[[] for _ in range(12)] for ii in range(226)]
+    locs = [[[] for _ in range(12)] for ii in range(226)]
+    counts = [[[] for _ in range(12)] for ii in range(226)]
     # Read the eBird data into a DataFrame
     ebird = pd.read_csv(file_path)
     ebird = ebird.drop(columns=['year'])
@@ -48,15 +48,15 @@ if __name__ == "__main__":
             loc = [float(val) for val in loc]
             lat, lon = loc[0], loc[1]
             case = []
-            monthly_box = [box for box in generated_box if box[0] == i]
+            monthly_box = [box for box in generated_box if box[0] == i+1]#i+1
             # Find the matching cases from selected_columns
-            for month, sequence, longitude_lower_bound, longitude_upper_bound, latitude_lower_bound, latitude_upper_bound in monthly_box:
-                if longitude_lower_bound <= lon < longitude_upper_bound and latitude_lower_bound <= lat < latitude_upper_bound:
+            for month, sequence, longitude_lower_bound, longitude_upper_bound, latitude_lower_bound, latitude_upper_bound ,day_of_year_start, day_of_year_end in monthly_box:
+                if longitude_lower_bound <= lon < longitude_upper_bound and latitude_lower_bound <= lat < latitude_upper_bound and day_of_year_start <= day < day_of_year_end:
                     case.append(sequence)
             if len(case) == 0:
                 continue
-            label = line.iloc[37:]           
-            feature = line.iloc[3:37].astype(float)
+            label = line.iloc[36:]           
+            feature = line.iloc[3:36].astype(float)
             for iii in range(len(feature)):
                 feature.iloc[iii] = float(feature.iloc[iii])
             for iii in range(len(label)):
@@ -69,9 +69,9 @@ if __name__ == "__main__":
             # Append features, labels, and other data
             for item in case:
                 item = int(item) 
-                features[item][mon_idx-1].append(np.array(feature))
-                labels[item][mon_idx-1].append(np.array(label))
-                locs[item][mon_idx-1].append(np.array(loc))
+                features[item][mon_idx].append(np.array(feature))
+                labels[item][mon_idx].append(np.array(label))
+                locs[item][mon_idx].append(np.array(loc))
                 
 
               
@@ -79,7 +79,7 @@ if __name__ == "__main__":
 
     invalid = 0
 
-    for i in range(97):
+    for i in range(226):
         for j in range(12):
             features[i][j] = np.array(features[i][j])
             labels[i][j] = np.array(labels[i][j])

@@ -57,14 +57,14 @@ for i in range(0, 12):
     ),                                      # hurdel model for zero-inflated problem (e.g., count)
     save_gridding_plot = True,
     ensemble_fold=10,                       # data are modeled 10 times, each time with jitter and rotation in Quadtree algo
-    min_ensemble_required=1,                # Only points covered by > 7 ensembles will be predicted
-    grid_len_upper_threshold=5,            # force splitting if the grid length exceeds 2.5
+    min_ensemble_required=7,                # Only points covered by > 7 ensembles will be predicted
+    grid_len_upper_threshold=10,            # force splitting if the grid length exceeds 2.5
     grid_len_lower_threshold=0.1,             # stop splitting if the grid length fall short 5         
     temporal_start=sum_days[i],                       # The next 4 params define the temporal sliding window
     temporal_end=sum_days[i+1],                            
-    temporal_step=1000,                       # The window takes steps of 20 DOY (see AdaSTEM demo for details)
-    temporal_bin_interval=1000,               # Each window will contain data of 30.5 DOY
-    points_lower_threshold=100,              # Only stixels with more than 50 samples are trained
+    temporal_step=7,                       # The window takes steps of 20 DOY (see AdaSTEM demo for details)
+    temporal_bin_interval=30.5,               # Each window will contain data of 30.5 DOY
+    points_lower_threshold=50,              # Only stixels with more than 50 samples are trained
     Spatio1='longitude',                    # The next three params define the name of 
     Spatio2='latitude',                     # spatial coordinates shown in the dataframe
     Temporal1='day_of_year',
@@ -137,9 +137,9 @@ ensemble_df['latitude_upper_bound'] = ensemble_df.geometry.bounds.maxy
 # Save the tuple to a .pkl file
 # Select necessary columns
 selected_columns1 = ensemble_df[['month', 'sequence', 'longitude_lower_bound','longitude_upper_bound',
-                                      'latitude_lower_bound', 'latitude_upper_bound']]
+                                      'latitude_lower_bound', 'latitude_upper_bound', 'day_of_year_start', 'day_of_year_end']]
 
 generated_box_tuple1 = tuple(map(tuple, selected_columns1.values))
 
-with open('generated_box_tuple12.pkl', 'wb') as f:
+with open('generated_box_tuple15.pkl', 'wb') as f:
     pickle.dump(generated_box_tuple1, f)
