@@ -15,10 +15,10 @@ flags.DEFINE_string('train_idx', '../data/train_idx.npy','The path of training d
 flags.DEFINE_string('valid_idx', '../data/valid_idx.npy','The path of validation data index')
 flags.DEFINE_string('test_idx', '../data/test_idx.npy','The path of testing data index')
 
-flags.DEFINE_integer('batch_size', 100, 'the number of data points in one minibatch') #128
-flags.DEFINE_integer('testing_size', 100, 'the number of data points in one testing or validation batch') #128
-flags.DEFINE_integer('mon', 5, 'the number of data points in one testing or validation batch') #128
-flags.DEFINE_integer('case', 301, 'the number of data points in one testing or validation batch') #128
+flags.DEFINE_integer('batch_size', 50, 'the number of data points in one minibatch') #128
+flags.DEFINE_integer('testing_size', 50, 'the number of data points in one testing or validation batch') #128
+#flags.DEFINE_integer('mon', 5, 'the number of data points in one testing or validation batch') #128
+#flags.DEFINE_integer('case', 128, 'the number of data points in one testing or validation batch') #128
 flags.DEFINE_float('learning_rate', 0.001, 'initial learning rate')
 #tf.app.flags.DEFINE_float('pred_lr', 1, 'the learning rate for predictor')
 flags.DEFINE_integer('max_epoch', 100, 'max epoch to train')
@@ -26,8 +26,8 @@ flags.DEFINE_float('weight_decay', 0.00001, 'weight decay rate')
 flags.DEFINE_float('threshold', 0.5, 'The probability threshold for the prediction')
 flags.DEFINE_float('lr_decay_ratio', 0.5, 'The decay ratio of learning rate')
 flags.DEFINE_float('lr_decay_times', 3.0, 'How many times does learning rate decay')
-flags.DEFINE_integer('n_test_sample', 1000, 'The sampling times for the testing')
-flags.DEFINE_integer('n_train_sample', 100, 'The sampling times for the training') #100
+flags.DEFINE_integer('n_test_sample', 500, 'The sampling times for the testing')
+flags.DEFINE_integer('n_train_sample', 50, 'The sampling times for the training') #100
 
 
 flags.DEFINE_integer('z_dim', 20, 'z dimention: the number of the independent normal random variables in DMSE \

@@ -54,7 +54,7 @@ def validation_step(hg, data, valid_idx, writer, step):
     all_nll_loss, all_marginal_loss, all_l2_loss, all_total_loss = 0, 0, 0, 0
     all_indiv_prob, all_label = [], []
 
-    for i in range(0, len(valid_idx), FLAGS.batch_size):
+    for i in range(0, len(valid_idx)-(len(valid_idx) % FLAGS.batch_size), FLAGS.batch_size):
         batch_indices = valid_idx[i:i + FLAGS.batch_size]
 
         input_nlcd = get_data.get_nlcd(data, batch_indices)
@@ -68,10 +68,11 @@ def validation_step(hg, data, valid_idx, writer, step):
         all_l2_loss += l2_loss * len(batch_indices)
         all_total_loss += total_loss * len(batch_indices)
         all_marginal_loss += marginal_loss * len(batch_indices)   
-        for i in indiv_prob:
-            all_indiv_prob.append(i)
-        for i in input_label:
-            all_label.append(i)
+        for ii in indiv_prob:
+            print(ii.shape)
+            all_indiv_prob.append(ii)
+        for ii in input_label:
+            all_label.append(ii)
    
     all_indiv_prob = np.array(all_indiv_prob)
     all_label = np.array(all_label)         
@@ -205,7 +206,7 @@ def main(_):
                     auc = roc_auc_score(temp_label, temp_indiv_prob)
                 except ValueError:
                     print('Warning: AUC computation failed due to label mismatch.')
-                    auc = None
+                    auc = None 
 
                 
                 # Write to TensorBoard
@@ -220,7 +221,7 @@ def main(_):
                 
                 time_str = datetime.datetime.now().isoformat()
 
-                print ("validation results: %s\tauc=%.6f\tap=%.6f\tnll_loss=%.6f\tmarginal_loss=%.6f\tl2_loss=%.6f\ttotal_loss=%.6f" % (time_str, auc, ap, nll_loss, marginal_loss, l2_loss, total_loss))
+                print ("train step: %s\tap=%.6f\tnll_loss=%.6f\tmarginal_loss=%.6f\tl2_loss=%.6f\ttotal_loss=%.6f" % (time_str, ap, nll_loss, marginal_loss, l2_loss, total_loss))
                 #print ("validation results: ap=%.6f\tnll_loss=%.6f\tmarginal_loss=%.6f\tl2_loss=%.6f\ttotal_loss=%.6f" % (ap, nll_loss, mean_marginal_loss, l2_loss, total_loss))
 
                 # Reset accumulators
