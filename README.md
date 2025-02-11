@@ -2,13 +2,19 @@
 
 This project migrate code from https://github.com/gomes-lab/DMVP-DRNets/tree/v1.0 to achieve the research objective of analyzing bird population changes in the Gulf of Mexico with sea level rises.
 
-## Requirements
+## Initialization
+To get started, install Docker and Make to work with in the development environment.
+After doing so, create the container and get started training:
+```bash
+make build-image
+...
+make bash
+...
+root@90a65f49ddf2:/gulf-slr# 
+```
 
-- Python 3.6
-- PyTorch 
-- TensorFlow 2.0 #migrated from PyTorch 1.3.1
-- Torchvision 0.4.0
-- Scikit-learn 0.19.2
+## Data 
+Prior to training with current dataset, ensure that you have `ebird_occurance_habitat.csv` and `pland_elev_north_east_slope_ocean_chl_poc_t_trange_3km.csv` in the `data/` folder.
 
 ## Experiment with data splitting
 

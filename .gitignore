@@ -1,0 +1,3 @@
+# data files too large for git
+data/ebird_occurance_habitat.csv
+data/pland_elev_north_east_slope_ocean_chl_poc_t_trange_3km.csv
