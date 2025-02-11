@@ -6,14 +6,16 @@ This project migrate code from https://github.com/gomes-lab/DMVP-DRNets/tree/v1.
 To get started, install Docker and Make to work with in the development environment.
 After doing so, create the container and get started training:
 ```bash
+make repo-init
+...
 make build-image
 ...
 make bash
 ...
-root@90a65f49ddf2:/gulf-slr# 
+root@90a65f49ddf2:/gulf-slr#
 ```
 
-## Data 
+## Data
 Prior to training with current dataset, ensure that you have `ebird_occurance_habitat.csv` and `pland_elev_north_east_slope_ocean_chl_poc_t_trange_3km.csv` in the `data/` folder.
 
 ## Experiment with data splitting
@@ -21,7 +23,7 @@ Prior to training with current dataset, ensure that you have `ebird_occurance_ha
 The dataset can be split into small overlapping regions to smooth the predictions. The splitting task was implemented using Stemflow package source code https://github.com/chenyangkang/stemflow. If this is desired, run the following:
 
 ```
-# Preprocess the data 
+# Preprocess the data
 cd data
 python3 preprocess_folder.py
 bash gen_data_split.sh
@@ -42,11 +44,11 @@ python3 map_inference_split.py
 
 The training logs will be stored under **./data/train_logs/** , with filenames of the form **nosplit_ebird_x** in the nosplit case, or **ebird_y_x** in the split case, where **x** is the month and **y** is the small region number.
 
-The nosplit evaluation test logs will be stored under **./data/test_logs/** , with filenames of the form **test_bird_x** , where **x** is the month. 
+The nosplit evaluation test logs will be stored under **./data/test_logs/** , with filenames of the form **test_bird_x** , where **x** is the month.
 
 The split evaluation test logs will be stored under **./data/small_map_data[x]/**, with filenames of the form **test_bird_y_x** , where **[x]** or **x** is the month and **y** is the small region number.
 
-The nosplit real-world test set logs will be stored under **./data/test_logs/** , with filenames of the form **test_bird_realworld_x** , where **x** is the month. 
+The nosplit real-world test set logs will be stored under **./data/test_logs/** , with filenames of the form **test_bird_realworld_x** , where **x** is the month.
 
 The split real-world test set logs will be stored under **./data/small_map_data[x]/** , with filenames of the form **test_bird_realworld_y_x** , where **[x]** or **x** is the month and **y** is the small region number.
 

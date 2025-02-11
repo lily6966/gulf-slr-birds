@@ -1,0 +1,38 @@
+model_dir: './data/small_model/'
+summary_dir: './summary'
+config_dir: './config.py'
+checkpoint_path: './model/model-43884'
+visual_dir: './visualization/'
+
+data_dir: '../data/loc_100sp_nlcd2011.npy'
+#tf.app.srd_dir: '../data/loc_ny_nlcd2006.npy'
+train_idx: '../data/train_idx.npy'
+valid_idx: '../data/valid_idx.npy'
+test_idx: '../data/test_idx.npy'
+
+batch_size: 50
+testing_size: 50
+#mon: 5
+#case: 128
+learning_rate: 0.001
+#tf.app.pred_lr: 1
+max_epoch: 100
+weight_decay: 0.00001
+threshold: 0.5
+lr_decay_ratio: 0.5
+lr_decay_times: 3.0
+n_test_sample: 500
+n_train_sample: 50
+
+z_dim: 20
+r_offset: 0
+r_dim: 404
+r_max_dim: 404
+
+loc_offset: 2
+nlcd_dim: 33
+#tf.app.user_dim: 6
+
+save_epoch: 2.0
+max_keep: 3
+check_freq: 10

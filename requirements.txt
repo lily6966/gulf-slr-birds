@@ -1,2 +1,3 @@
+tensorflow[and-cuda]
 pandas
 scikit-learn
