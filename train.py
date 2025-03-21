@@ -1,8 +1,9 @@
 import tensorflow as tf
 import numpy as np
+import pandas as pd
 import time
 import datetime
-import model
+import model_2
 import get_data
 import config
 from sklearn.metrics import average_precision_score, roc_auc_score
@@ -69,7 +70,6 @@ def validation_step(hg, data, valid_idx, writer, step):
         all_total_loss += total_loss * len(batch_indices)
         all_marginal_loss += marginal_loss * len(batch_indices)   
         for ii in indiv_prob:
-            print(ii.shape)
             all_indiv_prob.append(ii)
         for ii in input_label:
             all_label.append(ii)
@@ -87,6 +87,8 @@ def validation_step(hg, data, valid_idx, writer, step):
 
     all_indiv_prob = np.concatenate(all_indiv_prob).flatten()
     all_label = np.concatenate(all_label).flatten()
+    print(all_indiv_prob)
+    print(all_label)
     ap = average_precision_score(all_label, all_indiv_prob)
     
                 
@@ -100,6 +102,7 @@ def validation_step(hg, data, valid_idx, writer, step):
         tf.summary.scalar("validation/auc", auc, step=step)
         tf.summary.scalar("validation/ap", ap, step=step)
         tf.summary.scalar("validation/nll_loss", mean_nll_loss, step=step)
+        tf.summary.scalar("validation/marginal_loss", mean_marginal_loss, step=step)
         tf.summary.scalar("validation/l2_loss", mean_l2_loss, step=step)
         tf.summary.scalar("validation/total_loss", mean_total_loss, step=step)
 
@@ -127,11 +130,11 @@ def main(_):
 
     # Building the model
     print('Building model...')
-    hg = model.MODEL(is_training=True)
+    hg = model_2.MODEL(is_training=True)
     
     # Learning rate schedule
     learning_rate_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
-        initial_learning_rate=0.1,
+        initial_learning_rate=0.01,
         decay_steps=10000,
         decay_rate=0.96,
         staircase=True
@@ -240,11 +243,21 @@ def main(_):
             print(f"New best loss: {mean_nll_loss:.6f}, saving model...")
             best_loss = mean_nll_loss
             checkpoint.save(file_prefix=checkpoint_prefix)
+            drop_count = 0
+        else:
+            drop_count += 1
+        
+        # Early stopping
+        if drop_count > 10:
+            print("Early stopping triggered")
+            break
 
     print('Training completed!')
     print(f'Best validation loss: {best_loss}')
     ed_time = time.time()
     print("Total running time:", ed_time - st_time)
+
+    
 
 if __name__ == '__main__':
     app.run(main)
