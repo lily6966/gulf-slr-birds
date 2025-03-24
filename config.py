@@ -21,7 +21,7 @@ flags.DEFINE_integer('testing_size', 50, 'the number of data points in one testi
 #flags.DEFINE_integer('case', 128, 'the number of data points in one testing or validation batch') #128
 flags.DEFINE_float('learning_rate', 0.001, 'initial learning rate')
 #tf.app.flags.DEFINE_float('pred_lr', 1, 'the learning rate for predictor')
-flags.DEFINE_integer('max_epoch', 100, 'max epoch to train')
+flags.DEFINE_integer('max_epoch', 10, 'max epoch to train')
 flags.DEFINE_float('weight_decay', 0.00001, 'weight decay rate')
 flags.DEFINE_float('threshold', 0.5, 'The probability threshold for the prediction')
 flags.DEFINE_float('lr_decay_ratio', 0.5, 'The decay ratio of learning rate')
